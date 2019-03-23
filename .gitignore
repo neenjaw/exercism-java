@@ -1,3 +1,11 @@
+# Ignore prebuilt exercism stuff
+*.classpath
+*.project
+*.gradle
+*.prefs
+
+build/
+
 # Compiled class file
 *.class
 
