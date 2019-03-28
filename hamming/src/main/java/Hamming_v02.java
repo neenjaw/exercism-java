@@ -15,8 +15,12 @@ class Hamming {
         }
 
         int hammingCount = (int) IntStream.range(0, leftStrand.length())
-                                          .filter(i -> (leftStrand.charAt(i) != rightStrand.charAt(i)))
-                                          .count();
+                                          .reduce(0, (a, i) -> {
+                                              if (leftStrand.charAt(i) != rightStrand.charAt(i))
+                                                  return a + 1;
+                                              else
+                                                  return a;
+                                          });
 
         this.hammingDistance = hammingCount;
     }
