@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 class Gigasecond {
-    private final long gigaSecond = 1_000_000_000l;
+    private final long GIGASECOND = 1_000_000_000l;
     private final LocalDateTime gigaMoment;
 
     Gigasecond(LocalDate moment) {
@@ -10,7 +10,7 @@ class Gigasecond {
     }
 
     Gigasecond(LocalDateTime moment) {
-        gigaMoment = moment.plusSeconds(gigaSecond);
+        gigaMoment = moment.plusSeconds(GIGASECOND);
     }
 
     LocalDateTime getDateTime() {
