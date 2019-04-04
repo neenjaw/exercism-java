@@ -1,11 +1,21 @@
+import java.util.stream.IntStream;
+
 class Scrabble {
+    private final String WORD;
 
     Scrabble(String word) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        WORD = word;
     }
 
     int getScore() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        ScrabbleMap letterScoreMap = new ScrabbleMap();
+        
+        int score = 
+            IntStream.range(0, WORD.length())
+                     .map(i -> letterScoreMap.getLetterScore(WORD.charAt(i)))
+                     .sum();
+
+        return score;
     }
 
 }
