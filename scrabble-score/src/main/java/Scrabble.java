@@ -38,25 +38,26 @@ class Scrabble {
         }
     
         public int getLetterScore(char c) {
-            if (!LETTER_SCORE.containsKey(Character.toLowerCase(c))) {
+            char letter = Character.toLowerCase(c);
+
+            if (!LETTER_SCORE.containsKey(letter)) {
                 throw new IllegalArgumentException("Not a scrabble letter");
             }
 
-            return LETTER_SCORE.get(Character.toLowerCase(c));
+            return LETTER_SCORE.get(letter);
         }
     }
 
-    private Scrabble.ScoreMap scoreMap;
+    private static final ScoreMap SCORE_MAP = new ScoreMap();
     private String word;
 
     Scrabble(String word) {
-        this.scoreMap = new Scrabble.ScoreMap();
         this.word = word;
     }
 
     int getScore() {
         return IntStream.range(0, this.word.length())
-                        .map(i -> this.scoreMap.getLetterScore(this.word.charAt(i)))
+                        .map(i -> SCORE_MAP.getLetterScore(this.word.charAt(i)))
                         .sum();
     }
 }
