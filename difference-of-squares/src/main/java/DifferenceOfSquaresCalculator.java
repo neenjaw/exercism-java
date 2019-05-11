@@ -34,4 +34,29 @@ class DifferenceOfSquaresCalculator {
 
         return squareOfSum - sumOfSquares;
     }
+
+    int computeClosedFormSumOfSquaresTo(int input) {
+        if (!validInput(input)) {
+            throw new IllegalArgumentException(ILLEGAL_INPUT_ERROR);
+        }
+
+        return ((input * (input + 1) * ((2 * input) + 1)) / 6);
+    }
+
+    int computeClosedFormSquareOfSumTo(int input) {
+        if (!validInput(input)) {
+            throw new IllegalArgumentException(ILLEGAL_INPUT_ERROR);
+        }
+
+        int closedSum = (input * (input + 1)) / 2;
+
+        return closedSum * closedSum;
+    }
+
+    int computeClosedFormDifferenceOfSquares(int input) {
+        int sumOfSquares = computeClosedFormSumOfSquaresTo(input);
+        int squareOfSum = computeClosedFormSquareOfSumTo(input);
+
+        return squareOfSum - sumOfSquares;
+    }
 }

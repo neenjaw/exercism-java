@@ -84,4 +84,26 @@ public class DifferenceOfSquaresCalculatorTest {
         assertEquals(expected, actual);
     }
 
+    // @Ignore("Remove to run test")
+    @Test
+    public void testClosedDifferenceOfSquaresUpToOne() {
+        int expected = 0;
+        int actual = calculator.computeClosedFormDifferenceOfSquares(1);
+        assertEquals(expected, actual);
+    }    // @Ignore("Remove to run test")
+
+    @Test
+    public void testClosedDifferenceOfSquaresUpToFive() {
+        int expected = 170;
+        int actual = calculator.computeClosedFormDifferenceOfSquares(5);
+        assertEquals(expected, actual);
+    }
+
+    // @Ignore("Remove to run test")
+    @Test
+    public void testClosedDifferenceOfSquaresUpToHundred() {
+        int expected = 25164150;
+        int actual = calculator.computeClosedFormDifferenceOfSquares(100);
+        assertEquals(expected, actual);
+    }
 }
