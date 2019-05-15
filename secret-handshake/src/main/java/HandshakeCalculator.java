@@ -24,6 +24,8 @@ class HandshakeCalculator {
     }
 
     private int getSignalBitmask(Signal signal) {
+        // this makes the assumption that the ordinal() method will 
+        // return a 0-based index, which is a positive integer
         return (1 << signal.ordinal());
     }
 }
