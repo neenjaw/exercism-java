@@ -24,6 +24,6 @@ class HandshakeCalculator {
     }
 
     private int getSignalBitmask(Signal signal) {
-        return (int) Math.pow(2, signal.ordinal());
+        return (1 << signal.ordinal());
     }
 }
