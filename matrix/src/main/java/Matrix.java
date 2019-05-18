@@ -62,11 +62,7 @@ class Matrix {
      * @throws MatrixIndexOutOfBoundsException
      */
     int[] getRow(int rowNumber) throws MatrixIndexOutOfBoundsException {
-        if (rowNumber < 1) {
-            throw new MatrixIndexOutOfBoundsException("Row number must be between 1 and " + matrix.length + ".");
-        }
-
-        if (rowNumber > matrix.length) {
+        if (rowNumber < 1 || rowNumber > matrix.length) {
             throw new MatrixIndexOutOfBoundsException("Row number must be between 1 and " + matrix.length + ".");
         }
 
@@ -85,18 +81,12 @@ class Matrix {
      * @throws MatrixIndexOutOfBoundsException
      */
     int[] getColumn(int columnNumber) throws MatrixIndexOutOfBoundsException {
-        if (columnNumber < 1) {
+        if (columnNumber < 1 || columnNumber > matrix[0].length) {
             throw new MatrixIndexOutOfBoundsException("Column number must be between 1 and " + matrix[0].length + ".");
         }
 
-        if (columnNumber > matrix[0].length) {
-            throw new MatrixIndexOutOfBoundsException("Column number must be between 1 and " + matrix[0].length + ".");
-        }
-
-        int[] column = Stream.of(matrix)
-                             .mapToInt(row -> row[columnNumber - 1])
-                             .toArray();
-
-        return Arrays.copyOf(column, column.length);
+        return Stream.of(matrix)
+                     .mapToInt(row -> row[columnNumber - 1])
+                     .toArray();
     }
 }
