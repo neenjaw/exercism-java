@@ -1,28 +1,19 @@
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.stream.DoubleStream;
 
 class Triangle {
-    private double a;
-    private double b;
-    private double c;
+    private final double[] sides;
 
     Triangle(double side1, double side2, double side3) throws TriangleException {
-        double[] sides = {side1, side2, side3};
+        sides = DoubleStream.of(side1, side2, side3)
+                            .sorted()
+                            .toArray();
 
-        boolean allSidesNonZero = Arrays.stream(sides)
-                                        .allMatch(side -> side > 0);
+        boolean smallestNonZero = sides[0] != 0;
 
-        double[] sortedSides = Arrays.stream(sides)
-                                     .sorted()
-                                     .toArray();
+        boolean validTriangle = sides[0] + sides [1] > sides[2];
 
-        a = sortedSides[0];
-        b = sortedSides[1];
-        c = sortedSides[2];
-
-        boolean validTriangle = a + b > c;
-
-        if (!(allSidesNonZero && validTriangle)) {
+        if (!(smallestNotZero && validTriangle)) {
             throw new TriangleException("Invalid Triangle Side Lengths");
         }
     }
@@ -36,7 +27,6 @@ class Triangle {
     }
 
     boolean isScalene() {
-        return (a != b && b != c && c != a);
+        return !(isEquilateral() || isIsosceles());
     }
-
 }
