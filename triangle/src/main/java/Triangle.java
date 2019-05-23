@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
 class Triangle {
@@ -9,24 +8,24 @@ class Triangle {
                             .sorted()
                             .toArray();
 
-        boolean smallestNonZero = sides[0] != 0;
+        boolean invalidSideLength = sides[0] <= 0;
 
-        boolean validTriangle = sides[0] + sides [1] > sides[2];
+        boolean invalidTriangle = sides[0] + sides [1] <= sides[2];
 
-        if (!(smallestNotZero && validTriangle)) {
+        if (invalidSideLength || invalidTriangle) {
             throw new TriangleException("Invalid Triangle Side Lengths");
         }
     }
 
     boolean isEquilateral() {
-        return (a == b && b == c);
+        return sides[0] == sides[2];
     }
 
     boolean isIsosceles() {
-        return (a == b || b == c || c == a);
+        return (sides[0] == sides[1]) || (sides[1] == sides[2]);
     }
 
     boolean isScalene() {
-        return !(isEquilateral() || isIsosceles());
+        return !isIsosceles();
     }
 }
