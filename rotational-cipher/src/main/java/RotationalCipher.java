@@ -14,7 +14,7 @@ class RotationalCipher {
 
     String rotate(String data) {
         return data.codePoints()
-                   .map(c -> rotateCodePoint(c))
+                   .map(this::rotateCodePoint)
                    .collect(StringBuilder::new,
                             StringBuilder::appendCodePoint,
                             StringBuilder::append)
@@ -22,14 +22,15 @@ class RotationalCipher {
     }
 
     int rotateCodePoint(int c) {
+        if (!inLowerCaseRange(c) && !inUpperCaseRange(c)) {
+            return c;
+        }
+
         if (inUpperCaseRange(c)) {
             return shiftCodePoint(c, UPPER_CASE_RANGE_START);
         } 
-        else if (inLowerCaseRange(c)) {
-            return shiftCodePoint(c, LOWER_CASE_RANGE_START);
-        }
         else {
-            return c;
+            return shiftCodePoint(c, LOWER_CASE_RANGE_START);
         }
     }
 
