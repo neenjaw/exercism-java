@@ -2,11 +2,8 @@ class RotationalCipher {
     private final int CIPHER_SHIFT_KEY;
     private final int ALPHABET_LENGTH = 26;
 
-    private final int UPPER_CASE_RANGE_START = (int) 'A';
-    private final int UPPER_CASE_RANGE_END = (int) 'Z';
-
-    private final int LOWER_CASE_RANGE_START = (int) 'a';
-    private final int LOWER_CASE_RANGE_END = (int) 'z';
+    private final int UPPER_CASE_OFFSET = 'A';
+    private final int LOWER_CASE_OFFSET = 'a';
 
     RotationalCipher(int shiftKey) {
         CIPHER_SHIFT_KEY = shiftKey;
@@ -21,28 +18,21 @@ class RotationalCipher {
                    .toString();
     }
 
-    int rotateCodePoint(int c) {
-        if (!inLowerCaseRange(c) && !inUpperCaseRange(c)) {
-            return c;
+    int rotateCodePoint(int codepoint) {
+        int codepointType = Character.getType(codepoint);
+
+        if (codepointType == Character.UPPERCASE_LETTER) {
+            return shiftCodePoint(codepoint, UPPER_CASE_OFFSET);
         }
 
-        if (inUpperCaseRange(c)) {
-            return shiftCodePoint(c, UPPER_CASE_RANGE_START);
-        } 
-        else {
-            return shiftCodePoint(c, LOWER_CASE_RANGE_START);
+        if (codepointType == Character.LOWERCASE_LETTER) {
+            return shiftCodePoint(codepoint, LOWER_CASE_OFFSET);
         }
+
+        return codepoint;
     }
 
-    boolean inUpperCaseRange(int c) {
-        return (UPPER_CASE_RANGE_START <= c) && (c <= UPPER_CASE_RANGE_END);
-    }
-
-    boolean inLowerCaseRange(int c) {
-        return (LOWER_CASE_RANGE_START <= c) && (c <= LOWER_CASE_RANGE_END);
-    }
-
-    int shiftCodePoint(int c, int rangeStart) {
-        return (((c - rangeStart) + CIPHER_SHIFT_KEY) % ALPHABET_LENGTH) + rangeStart;
+    int shiftCodePoint(int codepoint, int offset) {
+        return (((codepoint - offset) + CIPHER_SHIFT_KEY) % ALPHABET_LENGTH) + offset;
     }
 }
