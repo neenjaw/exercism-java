@@ -1,4 +1,3 @@
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -6,9 +5,8 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 
 public class MatrixTest {
-
     @Test
-    public void testCanIdentifySingleSaddlePoint() {
+    public void testCanIdentifySingleSaddlePoint() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
             Arrays.asList(9, 8, 7),
             Arrays.asList(5, 3, 2),
@@ -20,9 +18,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifyThatEmptyMatrixHasNoSaddlePoints() {
+    public void testCanIdentifyThatEmptyMatrixHasNoSaddlePoints() throws MalformedMatrixException {
         Matrix matrix = new Matrix(new ArrayList<>());
 
         Set<MatrixCoordinate> expectedSaddlePoints = Collections.emptySet();
@@ -30,9 +27,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifyLackOfSaddlePointsWhenThereAreNone() {
+    public void testCanIdentifyLackOfSaddlePointsWhenThereAreNone() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
             Arrays.asList(1, 2, 3),
             Arrays.asList(3, 1, 2),
@@ -44,9 +40,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifyMultipleSaddlePointsInAColumn() {
+    public void testCanIdentifyMultipleSaddlePointsInAColumn() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
             Arrays.asList(4, 5, 4),
             Arrays.asList(3, 5, 5),
@@ -62,9 +57,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifyMultipleSaddlePointsInARow() {
+    public void testCanIdentifyMultipleSaddlePointsInARow() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
                 Arrays.asList(6, 7, 8),
                 Arrays.asList(5, 5, 5),
@@ -80,9 +74,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifySaddlePointInBottomRightCorner() {
+    public void testCanIdentifySaddlePointInBottomRightCorner() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
             Arrays.asList(8, 7, 9),
             Arrays.asList(6, 7, 6),
@@ -94,9 +87,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifySaddlePointsInANonSquareMatrix() {
+    public void testCanIdentifySaddlePointsInANonSquareMatrix() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
                 Arrays.asList(3, 1, 3),
                 Arrays.asList(3, 2, 4)
@@ -110,9 +102,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifyThatSaddlePointsInASingleColumnMatrixAreThoseWithMinimumValue() {
+    public void testCanIdentifyThatSaddlePointsInASingleColumnMatrixAreThoseWithMinimumValue() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
                 Collections.singletonList(2),
                 Collections.singletonList(1),
@@ -128,9 +119,8 @@ public class MatrixTest {
         assertEquals(expectedSaddlePoints, matrix.getSaddlePoints());
     }
 
-    @Ignore("Remove to run test")
     @Test
-    public void testCanIdentifyThatSaddlePointsInASingleRowMatrixAreThoseWithMaximumValue() {
+    public void testCanIdentifyThatSaddlePointsInASingleRowMatrixAreThoseWithMaximumValue() throws MalformedMatrixException {
         Matrix matrix = new Matrix(Arrays.asList(
                 Arrays.asList(2, 5, 3, 5)
         ));
