@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +51,7 @@ class Matrix {
         int rows = passedValues.size();
 
         if (rows >= 1) {
-            int columns = values.get(0).size();
+            int columns = passedValues.get(0).size();
 
             try {
                 IntStream.range(0, rows).forEach(row -> {
@@ -84,7 +86,7 @@ class Matrix {
                         else if (value == colMinValues.get(column)) {
                             colMinRows.get(column).add(row);
                         }
-                        else if (value < colMinValues.get(row)) {
+                        else if (value < colMinValues.get(column)) {
                             colMinValues.set(column, value);
                             colMinRows.get(column).clear();
                             colMinRows.get(column).add(row);
