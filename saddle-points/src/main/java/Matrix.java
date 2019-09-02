@@ -63,29 +63,36 @@ class Matrix {
                         // add the value to the defensive copy of values
                         values.get(row).add(value);
 
-
+                        // Keep track of the row's max value:
+                        // -- if a new row, make the list and add the first element
                         if (row == rowMaxValues.size()) {
                             rowMaxValues.add(value);
                             rowMaxCols.add(new ArrayList<Integer>());
                             rowMaxCols.get(row).add(column);
                         }
+                        // -- if the value is equal to the current max, then add it to the list
                         else if (value == rowMaxValues.get(row)) {
                             rowMaxCols.get(row).add(column);
                         }
+                        // -- if the value is greater, then record the new max, clear the list, add itself
                         else if (value > rowMaxValues.get(row)) {
                             rowMaxValues.set(row, value);
                             rowMaxCols.get(row).clear();
                             rowMaxCols.get(row).add(column);
                         }
 
+                        // Keep track of the col's min value:
+                        // -- if a new col, make the list and add the first element
                         if (column == colMinValues.size()) {
                             colMinValues.add(value);
                             colMinRows.add(new ArrayList<Integer>());
                             colMinRows.get(column).add(row);
                         }
+                        // -- if the value is equal to the current min, then add it to the list
                         else if (value == colMinValues.get(column)) {
                             colMinRows.get(column).add(row);
                         }
+                        // -- if the value is lesser, then record the new min, clear the list, add itself
                         else if (value < colMinValues.get(column)) {
                             colMinValues.set(column, value);
                             colMinRows.get(column).clear();
