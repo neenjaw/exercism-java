@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,9 +7,6 @@ import java.util.stream.IntStream;
 class Matrix {
 
     private List<List<Integer>> matrix;
-
-    private List<Integer> rowMaxValues;
-    private List<Integer> colMinValues;
 
     private List<List<Integer>> columnLocationsforRowMax;
     private List<List<Integer>> rowLocationsforColumnMin;
@@ -106,51 +101,42 @@ class Matrix {
         }
 
         this.matrix = values;
-        this.rowMaxValues = rowMaxValues;
-        this.colMinValues = colMinValues;
         this.columnLocationsforRowMax = rowMaxCols;
         this.rowLocationsforColumnMin = colMinRows;
     }
 
+    /**
+     * getSaddlePoints
+     *
+     * Using the previously collected data about row maximums and column minimums, loop through the row maximums, look through
+     * the column minimums for an intersection.
+     *
+     * If an intersection is found, then create the point to return.
+     *
+     * Timing:
+     *   Best case: (assuming 1 max per row and one min per col) => O(numberRows * numberColumns).
+     *   Worst case: (assuming all rows equal and all columns equal) => O(numberRows * numberColumns * numberRows)
+     *
+     * @return
+     */
     Set<MatrixCoordinate> getSaddlePoints() {
         Set<MatrixCoordinate> points = new HashSet<>();
 
-        int rows = matrix.size();
+        IntStream.range(0, columnLocationsforRowMax.size())
+                 .forEach(row -> {
+                    List<Integer> columnLocations = columnLocationsforRowMax.get(row);
 
-        if (rows >= 1) {
-            int columns = matrix.get(0).size();
+                    IntStream.range(0, columnLocations.size())
+                             .forEach(index -> {
+                                int column = columnLocations.get(index);
 
-            IntStream.range(0, rows).forEach(row -> {
-                IntStream.range(0, columns).forEach(column -> {
-                    int currentElement = matrix.get(row).get(column);
-
-                    boolean isSaddlePoint = true;
-                    isSaddlePoint = isSaddlePoint && isGreaterOrEqualToRowElements(currentElement, row);
-                    isSaddlePoint = isSaddlePoint && isLessorOrEqualToColumnElements(currentElement, column);
-
-                    if (isSaddlePoint) {
-                        // convert coordinate from 0-indexed to 1-indexed
-                        points.add(new MatrixCoordinate(row+1, column+1));
-                    }
-                });
-            });
-        }
+                                if (rowLocationsforColumnMin.get(column).contains(row)) {
+                                    // convert coordinate from 0-indexed to 1-indexed
+                                    points.add(new MatrixCoordinate(row+1, column+1));
+                                }
+                             });
+                 });
 
         return points;
-    }
-
-    private boolean isGreaterOrEqualToRowElements(int element, int row) {
-        return IntStream.range(0, matrix.get(row).size())
-                        .allMatch(column -> {
-                            return element >= matrix.get(row).get(column);
-                        });
-    }
-
-
-    private boolean isLessorOrEqualToColumnElements(int element, int column) {
-        return IntStream.range(0, matrix.size())
-                        .allMatch(row -> {
-                            return element <= matrix.get(row).get(column);
-                        });
     }
 }
