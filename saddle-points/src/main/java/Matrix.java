@@ -1,4 +1,4 @@
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,16 +8,91 @@ class Matrix {
 
     private List<List<Integer>> matrix;
 
-    Matrix(List<List<Integer>> values) throws MalformedMatrixException {
-        int rows = values.size();
+    private List<List<Integer>> columnLocationsforRowMax;
+    private List<List<Integer>> rowLocationsforColumnMin;
+
+    /**
+     * Matrix Constructor
+     * @param passedValues
+     * @throws MalformedMatrixException
+     *
+     * This constructor takes a list which each index is a list of Integers, representing a matrix.
+     *
+     * The list is traversed in a nested loop to:
+     *   1) make sure the matrix isn't jagged
+     *       - saddle points are not defined in the case of a jagged matrix, throw exception if this is encountered
+     *   2) pre-process the matrix looking for row maximums and column minimums
+     *       a) two lists are maintained for the row maximums
+     *           i) a list of integers, representing the maximum for that row of the index
+     *           ii) a list containing a list of integers, representing all of the columns that the row maximum is encountered
+     *               in the case of multiple saddlepoints
+     *       b) two lists are maintained for the column minimums
+     *
+     * Once this is done, then store this data as a private variable
+     */
+    Matrix(List<List<Integer>> passedValues) throws MalformedMatrixException {
+        // create a new list for defensive copy
+        List<List<Integer>> values = new ArrayList<List<Integer>>();
+
+        // Each index keeps track of i'th Max/Min respectively
+        List<Integer> rowMaxValues = new ArrayList<Integer>();
+        List<Integer> colMinValues = new ArrayList<Integer>();
+
+        // Keep a 2-dimensional list, the first index represents the row (col) then the integers
+        // in the nested list represent the col (row) of the max (min)
+        List<List<Integer>> rowMaxCols = new ArrayList<List<Integer>>();
+        List<List<Integer>> colMinRows = new ArrayList<List<Integer>>();
+
+        int rows = passedValues.size();
 
         if (rows >= 1) {
-            int columns = values.get(0).size();
+            int columns = passedValues.get(0).size();
 
             try {
                 IntStream.range(0, rows).forEach(row -> {
+                    values.add(new ArrayList<Integer>());
+
                     IntStream.range(0, columns).forEach(column -> {
-                        values.get(row).get(column);
+                        int value = passedValues.get(row).get(column);
+
+                        // add the value to the defensive copy of values
+                        values.get(row).add(value);
+
+                        // Keep track of the row's max value:
+                        // -- if a new row, make the list and add the first element
+                        if (row == rowMaxValues.size()) {
+                            rowMaxValues.add(value);
+                            rowMaxCols.add(new ArrayList<Integer>());
+                            rowMaxCols.get(row).add(column);
+                        }
+                        // -- if the value is equal to the current max, then add it to the list
+                        else if (value == rowMaxValues.get(row)) {
+                            rowMaxCols.get(row).add(column);
+                        }
+                        // -- if the value is greater, then record the new max, clear the list, add itself
+                        else if (value > rowMaxValues.get(row)) {
+                            rowMaxValues.set(row, value);
+                            rowMaxCols.get(row).clear();
+                            rowMaxCols.get(row).add(column);
+                        }
+
+                        // Keep track of the col's min value:
+                        // -- if a new col, make the list and add the first element
+                        if (column == colMinValues.size()) {
+                            colMinValues.add(value);
+                            colMinRows.add(new ArrayList<Integer>());
+                            colMinRows.get(column).add(row);
+                        }
+                        // -- if the value is equal to the current min, then add it to the list
+                        else if (value == colMinValues.get(column)) {
+                            colMinRows.get(column).add(row);
+                        }
+                        // -- if the value is lesser, then record the new min, clear the list, add itself
+                        else if (value < colMinValues.get(column)) {
+                            colMinValues.set(column, value);
+                            colMinRows.get(column).clear();
+                            colMinRows.get(column).add(row);
+                        }
                     });
                 });
             } catch (IndexOutOfBoundsException e) {
@@ -25,48 +100,43 @@ class Matrix {
             }
         }
 
-        matrix = values;
+        this.matrix = values;
+        this.columnLocationsforRowMax = rowMaxCols;
+        this.rowLocationsforColumnMin = colMinRows;
     }
 
+    /**
+     * getSaddlePoints
+     *
+     * Using the previously collected data about row maximums and column minimums, loop through the row maximums, look through
+     * the column minimums for an intersection.
+     *
+     * If an intersection is found, then create the point to return.
+     *
+     * Timing:
+     *   Best case: (assuming 1 max per row and one min per col) => O(numberRows * numberColumns).
+     *   Worst case: (assuming all rows equal and all columns equal) => O(numberRows * numberColumns * numberRows)
+     *
+     * @return
+     */
     Set<MatrixCoordinate> getSaddlePoints() {
         Set<MatrixCoordinate> points = new HashSet<>();
 
-        int rows = matrix.size();
+        IntStream.range(0, columnLocationsforRowMax.size())
+                 .forEach(row -> {
+                    List<Integer> columnLocations = columnLocationsforRowMax.get(row);
 
-        if (rows >= 1) {
-            int columns = matrix.get(0).size();
+                    IntStream.range(0, columnLocations.size())
+                             .forEach(index -> {
+                                int column = columnLocations.get(index);
 
-            IntStream.range(0, rows).forEach(row -> {
-                IntStream.range(0, columns).forEach(column -> {
-                    int currentElement = matrix.get(row).get(column);
-
-                    boolean isSaddlePoint = true;
-                    isSaddlePoint = isSaddlePoint && isGreaterOrEqualToRowElements(currentElement, row);
-                    isSaddlePoint = isSaddlePoint && isLessorOrEqualToColumnElements(currentElement, column);
-    
-                    if (isSaddlePoint) {
-                        // convert coordinate from 0-indexed to 1-indexed
-                        points.add(new MatrixCoordinate(row+1, column+1));
-                    }
-                });
-            });
-        }
+                                if (rowLocationsforColumnMin.get(column).contains(row)) {
+                                    // convert coordinate from 0-indexed to 1-indexed
+                                    points.add(new MatrixCoordinate(row+1, column+1));
+                                }
+                             });
+                 });
 
         return points;
-    }
-
-    private boolean isGreaterOrEqualToRowElements(int element, int row) {
-        return IntStream.range(0, matrix.get(row).size())
-                        .allMatch(column -> {
-                            return element >= matrix.get(row).get(column);
-                        });
-    }
-
-
-    private boolean isLessorOrEqualToColumnElements(int element, int column) {
-        return IntStream.range(0, matrix.size())
-                        .allMatch(row -> {
-                            return element <= matrix.get(row).get(column);
-                        });
     }
 }
