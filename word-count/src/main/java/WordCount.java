@@ -1,6 +1,7 @@
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * WordCount
@@ -15,17 +16,17 @@ public class WordCount {
    *         the phrase.
    */
   public Map<String, Integer> phrase(String str) {
-    var counts = new HashMap<String, Integer>();
     var words = str.toLowerCase().split("[^\\p{Alnum}'\\-]");
 
     // Stream the array, filter out empty strings, then for each
-    // word, remove surrounding single quotes, add it to the map
-    Arrays.stream(words)
-          .filter(word -> !word.isEmpty())
-          .map(WordCount::removeQuotes)
-          .forEach(word -> countWords(word, counts));
-
-    return counts;
+    // word, remove surrounding single quotes, collect it into a map
+    return Arrays.stream(words)
+                 .filter(word -> !word.isEmpty())
+                 .map(WordCount::removeQuotes)
+                 .collect(
+                   Collectors.groupingBy(
+                     Function.identity(),
+                     Collectors.summingInt(w -> 1)));
   }
 
   private static String removeQuotes(String word) {
@@ -34,10 +35,5 @@ public class WordCount {
     }
 
     return word;
-  }
-
-  private static void countWords(String word, Map<String, Integer> counts) {
-    counts.computeIfPresent(word, (k, v) -> v + 1);
-    counts.putIfAbsent(word, 1);
   }
 }
