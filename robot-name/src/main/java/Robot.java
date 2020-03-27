@@ -19,6 +19,7 @@ public class Robot {
   }
 
   public void reset() throws FullRegistryException {
+    registry.releaseName(this.name);
     this.name = generateUniqueName();
   }
 

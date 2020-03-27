@@ -13,10 +13,14 @@ public class RobotRegistry {
     this.maximumPossibleNames = maximumPossibleNames;
   }
 
-  public void registerName(String name) throws AlreadyRegisteredException, FullRegistryException {
-    if (registry.size() == maximumPossibleNames) throw new FullRegistryException();
-    if (registry.contains(name)) throw new AlreadyRegisteredException(name);
+  public synchronized void registerName(String name) throws AlreadyRegisteredException, FullRegistryException {
+      if (registry.size() == maximumPossibleNames) throw new FullRegistryException();
+      if (registry.contains(name)) throw new AlreadyRegisteredException(name);
 
-    registry.add(name);
+      registry.add(name);
+  }
+
+  public void releaseName(String name) {
+    registry.remove(name);
   }
 }
