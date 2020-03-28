@@ -20,7 +20,7 @@ public class RobotRegistry {
       registry.add(name);
   }
 
-  public void releaseName(String name) {
+  public synchronized void releaseName(String name) {
     registry.remove(name);
   }
 }
