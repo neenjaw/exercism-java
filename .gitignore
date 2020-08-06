@@ -1,7 +1,7 @@
 # Ignore prebuilt exercism stuff
 *.classpath
 *.project
-*.gradle
+.gradle/
 *.prefs
 
 build/
